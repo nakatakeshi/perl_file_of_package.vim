@@ -46,3 +46,34 @@ How to use
 if your vim current cursor on some package name of perl file,
 when you type ,uf( if you set mapping this), then this plugin show unite source about files that under package name on your cursor.
 
+Caution
+============
+this plugin judge root_path finding .git directory.
+so root_path need to be git repository.
+
+Example
+============
+if tree result is
+```
+.
+├── .git
+├── lib
+│   ├── Hoge
+│   │   ├── DB.pm
+│   │   └── Model.pm
+│   └── Hoge.pm
+└── test.pl
+```
+
+test.pl is
+```perl
+use Hoge;
+Hoge::class_method();
+```
+and cursor on Hoge, then unite source list is
+```
+- lib/Hoge.pm
+- lib/Hoge/DB.pm
+- lib/Hoge/Model.pm
+```
+and same result when cursor also on Hoge::class_method
