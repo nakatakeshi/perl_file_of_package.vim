@@ -9,7 +9,6 @@ function! perl_file_of_package#get_paths(package_path)
     else
       let l:script_perl = 'perl'
     endif
-
     "" read from @INC path
     let l:perlpath = split(system(l:script_perl . ' -e "print map { \$_ . qq{\n}} @INC"'), '\n')
     "" read from additional lib path
@@ -26,13 +25,14 @@ function! perl_file_of_package#get_paths(package_path)
       let l:file_path = printf('%s/%s%s', l:perlpath[i], l:package_path, s:pm_ext)
       if (filereadable(l:file_path))
           call add(s:list, l:file_path)
-          let l:files = split(system(printf('find %s/%s', l:perlpath[i] , l:package_path )), '\n')
-          for s:file in l:files
-              if (filereadable(s:file))
-                  call add(s:list, s:file)
-              endif
-          endfor
-      else
+      endif
+      let l:files = split(system(printf('find %s/%s', l:perlpath[i] , l:package_path )), '\n')
+      for s:file in l:files
+          if (filereadable(s:file))
+              call add(s:list, s:file)
+          endif
+      endfor
+      if (!filereadable(l:file_path))
         let l:method_removed_package_path = substitute(l:package_path,'/[^(/)]*$','','g')
         let l:file_path = printf('%s/%s%s', l:perlpath[i], l:method_removed_package_path, s:pm_ext)
         if (filereadable(l:file_path))
